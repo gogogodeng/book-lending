@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert } from 'typeorm';
+import * as bcryptjs from 'bcryptjs';
 
 @Entity('user')
 export class User {
@@ -19,4 +20,9 @@ export class User {
 
   @Column({ nullable: true })
   remark: string;
+
+  @BeforeInsert()
+  async encryptPwd() {
+    this.password = await bcryptjs.hashSync(this.password, 10);
+  }
 }
