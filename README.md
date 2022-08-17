@@ -4,6 +4,8 @@ Nestjs-图书借阅系统 掘金系列文章（持续更新中）
 
 - [Nestjs图书借阅系统：需求和准备](https://juejin.cn/post/7129451611163721764)
 - [Nestjs图书借阅系统：数据库设计](https://juejin.cn/post/7130813977767968798)
+- [Nestjs图书借阅系统：登录注册](https://juejin.cn/post/7132294412239339557)
+- 
 
 可以根据我的commit记录来查看对应文章的版本。
 
