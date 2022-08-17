@@ -4,13 +4,19 @@ import {
   HttpException,
   HttpStatus,
   Request,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { AuthGuard } from '@nestjs/passport';
 import * as bcryptjs from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly jwtService: JwtService, // 要在这里注入对象，就必须在模块中注册
+  ) {}
 
   @Get('checkUser')
   async checkUser(@Request() req: any) {
@@ -23,7 +29,15 @@ export class AuthController {
     if (!isOk) {
       throw new HttpException('用户验证失败', HttpStatus.UNAUTHORIZED);
     }
-    return result;
+
+    return {
+      access_token: this.jwtService.sign({
+        id: result.id,
+        username: result.username,
+        name: result.name,
+        companyId: result.companyId,
+      }),
+    };
   }
 
   @Get('register')
@@ -35,5 +49,11 @@ export class AuthController {
       password,
     });
     return result;
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('test')
+  async test(@Request() req: any) {
+    return req.user;
   }
 }

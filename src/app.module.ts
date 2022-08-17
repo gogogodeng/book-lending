@@ -1,4 +1,8 @@
 import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { jwtConstants } from './strategies/constants';
+import { JwtStrategy } from './strategies/jwt.strategy';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -20,12 +24,16 @@ import { LendModule } from './lend/lend.module';
       entityPrefix: 'bl_',
       synchronize: true,
     }),
-    // TypeOrmModule.forFeature([User]),
+    PassportModule,
+    JwtModule.register({
+      secret: jwtConstants.secret,
+      signOptions: { expiresIn: '60s' },
+    }),
     AuthModule,
     MemberModule,
     LendModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, JwtStrategy],
 })
 export class AppModule {}

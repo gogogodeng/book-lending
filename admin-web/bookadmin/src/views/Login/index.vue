@@ -27,6 +27,8 @@
     <a-button type="primary" html-type="submit">登录</a-button>
       &nbsp;&nbsp;&nbsp;&nbsp;
       <a-button type="primary" @click="register" >注册</a-button>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <a-button type="primary" @click="test" >测试</a-button>
   </a-form>
 </template>
 <script setup>
@@ -51,6 +53,8 @@ const onFinish = values => {
   }).then(r=>{
     console.log(r)
     message.success('登录成功')
+    // 登录后存储access_token
+    localStorage.setItem('access_token', r.data.access_token)
   }).catch(err=>{
     message.error(err.response.data.message);
   })
@@ -70,6 +74,20 @@ const register = () => {
   }).then(r=>{
     console.log(r)
     message.success('注册成功')
+  }).catch(err=>{
+    message.error(err.response.data.message);
+  })
+}
+
+const test = () => {
+  let token = localStorage.getItem('access_token') 
+  axios.get('http://localhost:3000/lend/test',{
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }).then(r=>{
+    console.log(r)
+    message.success('测试成功')
   }).catch(err=>{
     message.error(err.response.data.message);
   })
